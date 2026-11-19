@@ -7,6 +7,10 @@ import CvApp from "../applications/CvApp.vue";
 import ProjectsApp from "../applications/ProjectsApp.vue";
 import AboutApp from "../applications/AboutApp.vue";
 import ContactApp from "../applications/ContactApp.vue";
+import Chess from "../Chess.vue";
+
+import { TheChessboard } from "vue3-chessboard";
+import "vue3-chessboard/style.css";
 
 const items = ref<DesktopItem[]>([
   {
@@ -33,6 +37,13 @@ const items = ref<DesktopItem[]>([
     type: "mail",
     position: { x: 32, y: 380 },
   },
+
+  {
+    id: "chess",
+    name: "Chess",
+    type: "chess",
+    position: { x: 152, y: 35 },
+  },
 ]);
 const workspaceRef = ref<HTMLElement | null>(null);
 const selectedId = ref<string | null>(null);
@@ -43,6 +54,7 @@ const applications = {
   projects: ProjectsApp,
   about: AboutApp,
   contact: ContactApp,
+  chess: Chess,
 };
 type AppId = keyof typeof applications;
 const activeWindow = ref<AppId | null>(null);
@@ -98,6 +110,15 @@ function moveItem(id: string, x: number, y: number) {
         @open="openItem"
         @move="moveItem"
       />
+      <!-- <div class="chess-app">
+        <Chess />
+      </div> -->
+
+      <!-- <div class="chess-app" data-no-drag>
+        <ClientOnly>
+          <TheChessboard />
+        </ClientOnly>
+      </div> -->
 
       <DesktopWindow
         v-if="activeWindow"
@@ -119,6 +140,13 @@ function moveItem(id: string, x: number, y: number) {
 </template>
 
 <style scoped lang="scss">
+.chess-app {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  overflow: auto;
+  z-index: 10000;
+}
 .desktop {
   position: relative;
   display: flex;

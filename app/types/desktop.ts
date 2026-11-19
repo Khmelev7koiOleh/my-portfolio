@@ -1,4 +1,4 @@
-export type DesktopIconType = "folder" | "file" | "user" | "mail";
+export type DesktopIconType = "folder" | "file" | "user" | "mail" | "chess";
 
 export interface DesktopItem {
   id: string;

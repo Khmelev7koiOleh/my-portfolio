@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useDraggable } from "@vueuse/core";
-import { Folder, FileText, UserRound, Mail } from "lucide-vue-next";
+import {
+  Folder,
+  FileText,
+  UserRound,
+  Mail,
+  ChessKnight,
+} from "lucide-vue-next";
+// import Chess from "/../public/icons/chess.png";
 
 import type { DesktopItem } from "~/types/desktop";
 
@@ -24,10 +31,12 @@ const icons = {
   file: FileText,
   user: UserRound,
   mail: Mail,
+  chess: "/icons/chess.png",
 };
 
 const iconComponent = computed(() => icons[props.item.type]);
 
+const isImage = computed(() => typeof iconComponent.value === "string");
 let dragStart = { x: 0, y: 0 };
 let moved = false;
 const { x, y, style, isDragging } = useDraggable(iconRef, {
@@ -78,7 +87,16 @@ function handleOpen() {
     @keydown.enter.prevent="handleOpen"
   >
     <span class="desktop-icon__image">
-      <component :is="iconComponent" :size="48" :stroke-width="1.5" />
+      <img
+        v-if="isImage"
+        :src="iconComponent as string"
+        :alt="item.name"
+        class="desktop-icon__custom-image"
+        draggable="false"
+        width="48"
+      />
+
+      <component :is="iconComponent" v-else :size="48" :stroke-width="1.5" />
     </span>
 
     <span class="desktop-icon__name">

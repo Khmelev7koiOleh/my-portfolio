@@ -26,6 +26,9 @@ import { Icon } from "@iconify/vue";
   <div class="menubar">
     <nav class="menubar-nav">
       <div class="menubar-nav__item">
+        <img src="/../public/icons/finder.png" alt="" width="65" height="65" />
+      </div>
+      <div class="menubar-nav__item">
         <img src="/../public/icons/vscode.png" alt="" width="65" height="65" />
       </div>
       <div class="menubar-nav__item">
@@ -45,9 +48,8 @@ import { Icon } from "@iconify/vue";
       <div class="menubar-nav__item">
         <img src="/../public/icons/figma.png" alt="" width="65" height="65" />
       </div>
-
       <div class="menubar-nav__item">
-        <img src="/../public/icons/finder.png" alt="" width="65" height="65" />
+        <img src="/../public/icons/GPT.png" alt="" width="65" height="65" />
       </div>
     </nav>
   </div>
