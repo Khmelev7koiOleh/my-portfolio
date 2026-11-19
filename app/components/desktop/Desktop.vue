@@ -3,6 +3,10 @@ import { ref } from "vue";
 import type { DesktopItem } from "~/types/desktop.ts";
 import HeaderMenuBar from "./HeaderMenuBar.vue";
 import FooterMenuBar from "./FooterMenuBar.vue";
+import CvApp from "../applications/CvApp.vue";
+import ProjectsApp from "../applications/ProjectsApp.vue";
+import AboutApp from "../applications/AboutApp.vue";
+import ContactApp from "../applications/ContactApp.vue";
 
 const items = ref<DesktopItem[]>([
   {
@@ -30,18 +34,42 @@ const items = ref<DesktopItem[]>([
     position: { x: 32, y: 380 },
   },
 ]);
-
+const workspaceRef = ref<HTMLElement | null>(null);
 const selectedId = ref<string | null>(null);
 const activeItem = ref<string | null>(null);
 
+const applications = {
+  cv: CvApp,
+  projects: ProjectsApp,
+  about: AboutApp,
+  contact: ContactApp,
+};
+type AppId = keyof typeof applications;
+const activeWindow = ref<AppId | null>(null);
+const maximizeWindow = ref(false);
+const activeComponent = computed(() => {
+  if (activeWindow.value == null) return;
+  else return applications[activeWindow.value];
+});
 function selectItem(id: string) {
   selectedId.value = id;
 }
 
-function openItem(id: string) {
-  activeItem.value = id;
+function isAppId(id: string): id is AppId {
+  return Object.prototype.hasOwnProperty.call(applications, id);
 }
 
+function openItem(id: string) {
+  if (!isAppId(id)) return;
+
+  if (activeWindow.value === id) {
+    activeWindow.value = null;
+  } else {
+    activeWindow.value = id;
+  }
+
+  maximizeWindow.value = false;
+}
 function moveItem(id: string, x: number, y: number) {
   const item = items.value.find((item) => item.id === id);
 
@@ -55,21 +83,35 @@ function moveItem(id: string, x: number, y: number) {
   <main class="desktop">
     <HeaderMenuBar />
 
-    <section class="desktop__workspace" @click.self="selectedId = null">
+    <section
+      ref="workspaceRef"
+      class="desktop__workspace"
+      @click.self="selectedId = null"
+    >
       <DesktopIcon
         v-for="item in items"
         :key="item.id"
         :item="item"
         :selected="selectedId === item.id"
+        :workspace-ref="workspaceRef"
         @select="selectItem"
         @open="openItem"
         @move="moveItem"
       />
 
-      <div v-if="activeItem" class="desktop__message">
-        Opening {{ activeItem }}...
-        <button @click="activeItem = null">Close</button>
-      </div>
+      <DesktopWindow
+        v-if="activeWindow"
+        :title="activeWindow"
+        @close="((activeWindow = null), (maximizeWindow = false))"
+        @maximize="maximizeWindow = !maximizeWindow"
+      >
+        <component
+          class="desktop__component"
+          v-if="activeComponent"
+          :is="activeComponent"
+          :maximized="maximizeWindow"
+        />
+      </DesktopWindow>
     </section>
     <FooterMenuBar />
     <Dock />
@@ -95,21 +137,6 @@ function moveItem(id: string, x: number, y: number) {
     position: relative;
     flex: 1;
     min-height: 0;
-  }
-
-  &__message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    padding: 24px;
-    border-radius: 12px;
-    background: rgb(20 30 50 / 85%);
-    color: white;
-    backdrop-filter: blur(16px);
-
-    z-index: 20;
   }
 }
 </style>

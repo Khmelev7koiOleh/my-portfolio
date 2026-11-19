@@ -29,7 +29,18 @@ import { Icon } from "@iconify/vue";
         <img src="/../public/icons/vscode.png" alt="" width="65" height="65" />
       </div>
       <div class="menubar-nav__item">
-        <img src="/../public/icons/github.png" alt="" width="65" height="65" />
+        <a
+          href="https://github.com/Khmelev7koiOleh"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="/../public/icons/github.png"
+            alt=""
+            width="65"
+            height="65"
+          />
+        </a>
       </div>
       <div class="menubar-nav__item">
         <img src="/../public/icons/figma.png" alt="" width="65" height="65" />

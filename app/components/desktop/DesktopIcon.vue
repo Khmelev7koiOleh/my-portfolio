@@ -8,6 +8,7 @@ import type { DesktopItem } from "~/types/desktop";
 const props = defineProps<{
   item: DesktopItem;
   selected: boolean;
+  workspaceRef: HTMLElement | null;
 }>();
 
 const emit = defineEmits<{
@@ -29,9 +30,9 @@ const iconComponent = computed(() => icons[props.item.type]);
 
 let dragStart = { x: 0, y: 0 };
 let moved = false;
-
 const { x, y, style, isDragging } = useDraggable(iconRef, {
   initialValue: props.item.position,
+  containerElement: () => props.workspaceRef,
   preventDefault: true,
 
   onStart(position) {
